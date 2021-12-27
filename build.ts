@@ -58,6 +58,7 @@ makeManifestFile();
   await fs.mkdir(distPath('popup'), { recursive: true });
   await fs.mkdir(distPath('dist/icons'), { recursive: true });
 
+  // build tsx by esbuild
   build({
     entryPoints: ['popup/index.tsx'],
     bundle: true,
@@ -66,6 +67,7 @@ makeManifestFile();
     sourcemap: devFlag ? 'inline' : false,
   });
 
+  // copy static files
   if (watchFlag) {
     chokidar.watch('popup/popup.html').on('all', (event, path) => {
       console.log(event, path);
