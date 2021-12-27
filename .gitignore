@@ -136,3 +136,5 @@ dist
 
 /build.js
 /web-ext-artifacts
+/ext-firefox
+/ext-chrome

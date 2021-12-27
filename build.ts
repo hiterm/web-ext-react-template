@@ -19,6 +19,12 @@ const targetBrowser: Browser = firefoxFlag
     ? 'chrome'
     : 'firefox';
 
+const distDir = firefoxFlag
+  ? 'ext-firefox'
+  : chromeFlag
+    ? 'ext-chrome'
+    : 'ext-firefox';
+
 const watchOption: BuildOptions['watch'] = watchFlag
   ? {
     onRebuild: (error, result) => {
@@ -28,6 +34,8 @@ const watchOption: BuildOptions['watch'] = watchFlag
   }
   : false;
 
+const distPath = (relPath: string) => path.join(distDir, relPath);
+
 const makeManifestFile = async () => {
   const baseManifestJson = JSON.parse(
     await fs.readFile('manifest.json', 'utf8')
@@ -35,22 +43,22 @@ const makeManifestFile = async () => {
   if (targetBrowser === 'firefox') {
     const firefoxJson = JSON.parse(await fs.readFile('firefox.json', 'utf8'));
     const manifestJson = { ...baseManifestJson, ...firefoxJson };
-    fs.writeFile('dist/manifest.json', JSON.stringify(manifestJson, null, 1));
+    fs.writeFile(distPath('manifest.json'), JSON.stringify(manifestJson, null, 1));
   } else {
-    fs.copyFile('manifest.json', 'dist/manifest.json');
+    fs.copyFile('manifest.json', distPath('manifest.json'));
   }
 };
 
 makeManifestFile();
 
 (async () => {
-  await fs.mkdir('dist/popup', { recursive: true });
-  await fs.mkdir('dist/icons', { recursive: true });
+  await fs.mkdir(distPath('popup'), { recursive: true });
+  await fs.mkdir(distPath('dist/icons'), { recursive: true });
 
   build({
     entryPoints: ['popup/index.tsx'],
     bundle: true,
-    outdir: 'dist/popup',
+    outdir: distPath('popup'),
     watch: watchOption,
     sourcemap: devFlag ? 'inline' : false,
   });
@@ -58,7 +66,7 @@ makeManifestFile();
   if (watchFlag) {
     chokidar.watch('popup/popup.html').on('all', (event, path) => {
       console.log(event, path);
-      fs.copyFile(path, 'dist/popup/popup.html');
+      fs.copyFile(path, distPath('popup/popup.html'));
     });
     chokidar.watch(['manifest.json', 'firefox.json']).on('all', (event, path) => {
       console.log(event, path);
@@ -66,11 +74,11 @@ makeManifestFile();
     });
     chokidar.watch('icons/*').on('all', (event, filepath) => {
       console.log(event, filepath);
-      fs.copyFile(filepath, path.join('dist', path.basename(filepath)));
+      fs.copyFile(filepath, distPath(path.basename(filepath)));
     });
   } else {
-    fs.copyFile('popup/popup.html', 'dist/popup/popup.html');
+    fs.copyFile('popup/popup.html', distPath('popup/popup.html'));
     makeManifestFile();
-    fs.cp('icons', 'dist/icons', { recursive: true });
+    fs.cp('icons', distPath('icons'), { recursive: true });
   }
 })();
