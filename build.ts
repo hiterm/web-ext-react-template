@@ -16,22 +16,22 @@ type Browser = 'firefox' | 'chrome';
 const targetBrowser: Browser = firefoxFlag
   ? 'firefox'
   : chromeFlag
-    ? 'chrome'
-    : 'firefox';
+  ? 'chrome'
+  : 'firefox';
 
 const distDir = firefoxFlag
   ? 'dist-firefox'
   : chromeFlag
-    ? 'dist-chrome'
-    : 'dist-firefox';
+  ? 'dist-chrome'
+  : 'dist-firefox';
 
 const watchOption: BuildOptions['watch'] = watchFlag
   ? {
-    onRebuild: (error, result) => {
-      if (error) console.error('watch build failed:', error);
-      else console.log('watch build succeeded:', result);
-    },
-  }
+      onRebuild: (error, result) => {
+        if (error) console.error('watch build failed:', error);
+        else console.log('watch build succeeded:', result);
+      },
+    }
   : false;
 
 const distPath = (relPath: string) => path.join(distDir, relPath);
@@ -43,7 +43,10 @@ const makeManifestFile = async () => {
   if (targetBrowser === 'firefox') {
     const firefoxJson = JSON.parse(await fs.readFile('firefox.json', 'utf8'));
     const manifestJson = { ...baseManifestJson, ...firefoxJson };
-    fs.writeFile(distPath('manifest.json'), JSON.stringify(manifestJson, null, 1));
+    fs.writeFile(
+      distPath('manifest.json'),
+      JSON.stringify(manifestJson, null, 1)
+    );
   } else {
     fs.copyFile('manifest.json', distPath('manifest.json'));
   }
@@ -68,10 +71,12 @@ makeManifestFile();
       console.log(event, path);
       fs.copyFile(path, distPath('popup/popup.html'));
     });
-    chokidar.watch(['manifest.json', 'firefox.json']).on('all', (event, path) => {
-      console.log(event, path);
-      makeManifestFile();
-    });
+    chokidar
+      .watch(['manifest.json', 'firefox.json'])
+      .on('all', (event, path) => {
+        console.log(event, path);
+        makeManifestFile();
+      });
     chokidar.watch('icons/*').on('all', (event, filepath) => {
       console.log(event, filepath);
       fs.copyFile(filepath, distPath(path.basename(filepath)));

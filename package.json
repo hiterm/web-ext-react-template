@@ -6,8 +6,8 @@
     "build": "ts-node build.ts",
     "build:firefox": "ts-node build.ts --firefox",
     "build:chrome": "ts-node build.ts --chrome",
-    "run:firefox" : "web-ext run -s dist-firefox",
-    "run:chrome" : "web-ext run -s dist-chrome -t chromium",
+    "run:firefox": "web-ext run -s dist-firefox",
+    "run:chrome": "web-ext run -s dist-chrome -t chromium",
     "package:firefox": "web-ext build -s dist-firefox --overwrite-dest"
   },
   "dependencies": {
