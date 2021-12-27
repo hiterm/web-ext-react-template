@@ -9,9 +9,6 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'prettier',
   ],
-  rules: {
-    'import/no-unresolved': 0,
-  },
   env: {
     node: true,
   },
