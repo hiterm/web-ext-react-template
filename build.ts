@@ -20,10 +20,10 @@ const targetBrowser: Browser = firefoxFlag
     : 'firefox';
 
 const distDir = firefoxFlag
-  ? 'ext-firefox'
+  ? 'dist-firefox'
   : chromeFlag
-    ? 'ext-chrome'
-    : 'ext-firefox';
+    ? 'dist-chrome'
+    : 'dist-firefox';
 
 const watchOption: BuildOptions['watch'] = watchFlag
   ? {
