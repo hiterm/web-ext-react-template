@@ -20,6 +20,12 @@ With watch mode:
 yarn run build:firefox --watch
 ```
 
+Enable source map:
+
+```
+yarn run build:firefox --dev
+```
+
 Chrome:
 
 ```
