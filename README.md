@@ -1,6 +1,7 @@
 # Template for a browser extension
 
 Build a browser extension with React + TypeScript + esbuild.
+Supporting both Firefox and Chrome.
 
 ## Basic Usage
 
