@@ -74,7 +74,10 @@ const buildExtension = async (targetBrowser: Browser) => {
       });
     chokidar.watch('icons/*').on('all', (event, filepath) => {
       console.log(event, filepath);
-      fs.copyFile(filepath, distPath(path.basename(filepath), targetBrowser));
+      fs.copyFile(
+        filepath,
+        distPath(path.join('icons', path.basename(filepath)), targetBrowser)
+      );
     });
   } else {
     fs.copyFile(
