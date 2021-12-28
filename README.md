@@ -75,7 +75,7 @@ yarn run prettier --write .
 Edit `firefox.json`.
 It looks like ID need to match following format:
 
-- `{<GUID>}`
+- `{<UUID>}`
   - e.g. `{abac34b6-b4bd-4fc7-af89-6f7d30be386b}`
 - `<alphanum>@<alphanum>`
   - e.g. `dummy@dummy`
