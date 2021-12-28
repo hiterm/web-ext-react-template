@@ -82,6 +82,6 @@ It looks like ID need to match following format:
 
 cf. https://stackoverflow.com/questions/45339492/firefox-add-on-id-conventions
 
-### Add `background_scripts, etc.`
+### Add background_scripts, etc.
 
-Edit build.ts and configure [esbuild](https://esbuild.github.io/).
+Edit `build.ts` and configure [esbuild](https://esbuild.github.io/).
