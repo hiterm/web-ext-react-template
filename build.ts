@@ -36,7 +36,7 @@ const watchOption: BuildOptions['watch'] = watchFlag
 
 const distPath = (relPath: string) => path.join(distDir, relPath);
 
-const makeManifestFile = async () => {
+const makeManifestFile = async (targetBrowser: Browser) => {
   const baseManifestJson = JSON.parse(
     await fs.readFile('manifest.json', 'utf8')
   );
@@ -52,9 +52,7 @@ const makeManifestFile = async () => {
   }
 };
 
-makeManifestFile();
-
-(async () => {
+const buildExtension = async (targetBrowser: Browser) => {
   await fs.mkdir(distPath('popup'), { recursive: true });
   await fs.mkdir(distPath('dist/icons'), { recursive: true });
 
@@ -77,7 +75,7 @@ makeManifestFile();
       .watch(['manifest.json', 'firefox.json'])
       .on('all', (event, path) => {
         console.log(event, path);
-        makeManifestFile();
+        makeManifestFile(targetBrowser);
       });
     chokidar.watch('icons/*').on('all', (event, filepath) => {
       console.log(event, filepath);
@@ -85,7 +83,9 @@ makeManifestFile();
     });
   } else {
     fs.copyFile('popup/popup.html', distPath('popup/popup.html'));
-    makeManifestFile();
+    makeManifestFile(targetBrowser);
     fs.cp('icons', distPath('icons'), { recursive: true });
   }
-})();
+};
+
+buildExtension(targetBrowser);
