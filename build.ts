@@ -8,22 +8,7 @@ const devFlag = process.argv.includes('--dev');
 const chromeFlag = process.argv.includes('--chrome');
 const firefoxFlag = process.argv.includes('--firefox');
 
-if (chromeFlag && firefoxFlag) {
-  throw new Error('--chrome and --firefox cannot be used at the same time.');
-}
-
 type Browser = 'firefox' | 'chrome';
-const targetBrowser: Browser = firefoxFlag
-  ? 'firefox'
-  : chromeFlag
-  ? 'chrome'
-  : 'firefox';
-
-const distDir = firefoxFlag
-  ? 'dist-firefox'
-  : chromeFlag
-  ? 'dist-chrome'
-  : 'dist-firefox';
 
 const watchOption: BuildOptions['watch'] = watchFlag
   ? {
@@ -34,9 +19,19 @@ const watchOption: BuildOptions['watch'] = watchFlag
     }
   : false;
 
-const distPath = (relPath: string) => path.join(distDir, relPath);
+const distDir = (targetBrowser: Browser) => {
+  switch (targetBrowser) {
+    case 'firefox':
+      return 'dist-firefox';
+    case 'chrome':
+      return 'dist-chrome';
+  }
+};
 
-const makeManifestFile = async () => {
+const distPath = (relPath: string, targetBrowser: Browser) =>
+  path.join(distDir(targetBrowser), relPath);
+
+const makeManifestFile = async (targetBrowser: Browser) => {
   const baseManifestJson = JSON.parse(
     await fs.readFile('manifest.json', 'utf8')
   );
@@ -44,25 +39,23 @@ const makeManifestFile = async () => {
     const firefoxJson = JSON.parse(await fs.readFile('firefox.json', 'utf8'));
     const manifestJson = { ...baseManifestJson, ...firefoxJson };
     fs.writeFile(
-      distPath('manifest.json'),
+      distPath('manifest.json', targetBrowser),
       JSON.stringify(manifestJson, null, 1)
     );
   } else {
-    fs.copyFile('manifest.json', distPath('manifest.json'));
+    fs.copyFile('manifest.json', distPath('manifest.json', targetBrowser));
   }
 };
 
-makeManifestFile();
-
-(async () => {
-  await fs.mkdir(distPath('popup'), { recursive: true });
-  await fs.mkdir(distPath('dist/icons'), { recursive: true });
+const buildExtension = async (targetBrowser: Browser) => {
+  await fs.mkdir(distPath('popup', targetBrowser), { recursive: true });
+  await fs.mkdir(distPath('icons', targetBrowser), { recursive: true });
 
   // build tsx by esbuild
   build({
     entryPoints: ['popup/index.tsx'],
     bundle: true,
-    outdir: distPath('popup'),
+    outdir: distPath('popup', targetBrowser),
     watch: watchOption,
     sourcemap: devFlag ? 'inline' : false,
   });
@@ -71,21 +64,34 @@ makeManifestFile();
   if (watchFlag) {
     chokidar.watch('popup/popup.html').on('all', (event, path) => {
       console.log(event, path);
-      fs.copyFile(path, distPath('popup/popup.html'));
+      fs.copyFile(path, distPath('popup/popup.html', targetBrowser));
     });
     chokidar
       .watch(['manifest.json', 'firefox.json'])
       .on('all', (event, path) => {
         console.log(event, path);
-        makeManifestFile();
+        makeManifestFile(targetBrowser);
       });
     chokidar.watch('icons/*').on('all', (event, filepath) => {
       console.log(event, filepath);
-      fs.copyFile(filepath, distPath(path.basename(filepath)));
+      fs.copyFile(
+        filepath,
+        distPath(path.join('icons', path.basename(filepath)), targetBrowser)
+      );
     });
   } else {
-    fs.copyFile('popup/popup.html', distPath('popup/popup.html'));
-    makeManifestFile();
-    fs.cp('icons', distPath('icons'), { recursive: true });
+    fs.copyFile(
+      'popup/popup.html',
+      distPath('popup/popup.html', targetBrowser)
+    );
+    makeManifestFile(targetBrowser);
+    fs.cp('icons', distPath('icons', targetBrowser), { recursive: true });
   }
-})();
+};
+
+if (firefoxFlag) {
+  buildExtension('firefox');
+}
+if (chromeFlag) {
+  buildExtension('chrome');
+}

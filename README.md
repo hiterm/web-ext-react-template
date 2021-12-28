@@ -33,6 +33,11 @@ Chrome:
 yarn run build:chrome
 ```
 
+Build for both browsers:
+```
+yarn build
+```
+
 ### Run with browsers
 
 Firefox:
