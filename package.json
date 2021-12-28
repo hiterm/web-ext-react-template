@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "ts-node -T build.ts",
+    "build": "ts-node -T build.ts --firefox --chrome",
     "build:firefox": "ts-node -T build.ts --firefox",
     "build:chrome": "ts-node -T build.ts --chrome",
     "run:firefox": "web-ext run -s dist-firefox",
