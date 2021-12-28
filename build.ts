@@ -10,14 +10,17 @@ const firefoxFlag = process.argv.includes('--firefox');
 
 type Browser = 'firefox' | 'chrome';
 
-const watchOption: BuildOptions['watch'] = watchFlag
-  ? {
-      onRebuild: (error, result) => {
-        if (error) console.error('watch build failed:', error);
-        else console.log('watch build succeeded:', result);
-      },
-    }
-  : false;
+const watchOption = (targetBrowser: Browser): BuildOptions['watch'] =>
+  watchFlag
+    ? {
+        onRebuild: (error, result) => {
+          if (error)
+            console.error(`watch build failed for ${targetBrowser}: `, error);
+          else
+            console.log(`watch build succeeded for ${targetBrowser}:`, result);
+        },
+      }
+    : false;
 
 const distDir = (targetBrowser: Browser) => {
   switch (targetBrowser) {
@@ -56,7 +59,7 @@ const buildExtension = async (targetBrowser: Browser) => {
     entryPoints: ['popup/index.tsx'],
     bundle: true,
     outdir: distPath('popup', targetBrowser),
-    watch: watchOption,
+    watch: watchOption(targetBrowser),
     sourcemap: devFlag ? 'inline' : false,
   });
 
