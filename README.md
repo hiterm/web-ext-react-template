@@ -91,3 +91,8 @@ cf. https://stackoverflow.com/questions/45339492/firefox-add-on-id-conventions
 ### Add background_scripts, etc.
 
 Edit `build.ts` and configure [esbuild](https://esbuild.github.io/).
+
+## For Japanese users
+
+Here is an article about this template.  
+https://zenn.dev/htlsne/articles/web-ext-react-esbuild
