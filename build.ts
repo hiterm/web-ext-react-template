@@ -1,4 +1,4 @@
-import { Builder } from "./utils/buildUtils";
+import { Builder } from './utils/buildUtils';
 
 const watchFlag = process.argv.includes('--watch');
 const devFlag = process.argv.includes('--dev');
