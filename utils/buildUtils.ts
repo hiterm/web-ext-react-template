@@ -136,6 +136,11 @@ export class Builder {
         outdir: distPath(path.dirname(file), targetBrowser),
         watch: this.watchOption(targetBrowser),
         sourcemap: this.devFlag ? 'inline' : false,
+        define: {
+          'process.env.NODE_ENV': this.devFlag
+            ? '"development"'
+            : '"production"',
+        },
       });
     });
     this.staticFiles.forEach((file) => {
