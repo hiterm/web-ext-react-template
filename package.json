@@ -9,7 +9,7 @@
     "run:firefox": "web-ext run -s dist-firefox",
     "run:chrome": "web-ext run -s dist-chrome -t chromium",
     "package:firefox": "web-ext build -s dist-firefox --overwrite-dest",
-    "lint": "eslint . && prettier --check .",
+    "lint": "eslint --max-warnings=0 . && prettier --check .",
     "lint:fix": "eslint --fix . && prettier --write .",
     "format": "prettier --write ."
   },
