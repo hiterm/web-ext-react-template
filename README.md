@@ -65,13 +65,19 @@ https://support.mozilla.org/en-US/kb/add-on-signing-in-firefox
 ### ESLint
 
 ```
-yarn run eslint . --ext .js,.jsx,.ts,.tsx
+yarn run lint
+```
+
+#### Fix
+
+```
+yarn run lint:fix
 ```
 
 ### Prettier
 
 ```
-yarn run prettier --write .
+yarn run format
 ```
 
 ## Customization
