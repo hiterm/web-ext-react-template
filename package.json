@@ -8,7 +8,10 @@
     "build:chrome": "ts-node -T build.ts --chrome",
     "run:firefox": "web-ext run -s dist-firefox",
     "run:chrome": "web-ext run -s dist-chrome -t chromium",
-    "package:firefox": "web-ext build -s dist-firefox --overwrite-dest"
+    "package:firefox": "web-ext build -s dist-firefox --overwrite-dest",
+    "lint": "eslint --max-warnings=0 . && prettier --check .",
+    "lint:fix": "eslint --fix . && prettier --write .",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "esbuild": "^0.15.10",
@@ -20,12 +23,12 @@
     "@types/node": "^18.8.2",
     "@types/react-dom": "^18.0.6",
     "@types/webextension-polyfill": "^0.9.1",
-    "@typescript-eslint/eslint-plugin": "^5.39.0",
-    "@typescript-eslint/parser": "^5.39.0",
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
     "chokidar": "^3.5.3",
-    "eslint": "^8.24.0",
+    "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-react": "^7.31.8",
+    "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "2.7.1",
     "ts-node": "^10.9.1",
