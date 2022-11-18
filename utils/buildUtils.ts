@@ -18,18 +18,24 @@ const distPath = (relPath: string, targetBrowser: Browser) =>
   path.join(distDir(targetBrowser), relPath);
 
 const makeManifestFile = async (targetBrowser: Browser) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const baseManifestJson = JSON.parse(
     await fs.readFile('manifest.json', 'utf8')
   );
   if (targetBrowser === 'firefox') {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const firefoxJson = JSON.parse(await fs.readFile('firefox.json', 'utf8'));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const manifestJson = { ...baseManifestJson, ...firefoxJson };
-    fs.writeFile(
+    await fs.writeFile(
       distPath('manifest.json', targetBrowser),
       JSON.stringify(manifestJson, null, 1)
     );
   } else {
-    fs.copyFile('manifest.json', distPath('manifest.json', targetBrowser));
+    await fs.copyFile(
+      'manifest.json',
+      distPath('manifest.json', targetBrowser)
+    );
   }
 };
 
@@ -92,10 +98,10 @@ export class Builder {
     if (this.watchFlag) {
       chokidar.watch(file).on('all', (event, path) => {
         console.log(event, path);
-        fs.copyFile(path, distPath(file, targetBrowser));
+        void fs.copyFile(path, distPath(file, targetBrowser));
       });
     } else {
-      fs.copyFile(file, distPath(file, targetBrowser));
+      await fs.copyFile(file, distPath(file, targetBrowser));
     }
   }
   async copyStaticDir(dir: string, targetBrowser: Browser) {
@@ -105,13 +111,13 @@ export class Builder {
     if (this.watchFlag) {
       chokidar.watch(path.join(dir, '*')).on('all', (event, filepath) => {
         console.log(event, filepath);
-        fs.copyFile(
+        void fs.copyFile(
           filepath,
           distPath(path.join(dir, path.basename(filepath)), targetBrowser)
         );
       });
     } else {
-      fs.cp(dir, distPath(dir, targetBrowser), { recursive: true });
+      await fs.cp(dir, distPath(dir, targetBrowser), { recursive: true });
     }
   }
 
@@ -121,16 +127,16 @@ export class Builder {
         .watch(['manifest.json', 'firefox.json'])
         .on('all', (event, path) => {
           console.log(event, path);
-          makeManifestFile(targetBrowser);
+          void makeManifestFile(targetBrowser);
         });
     } else {
-      makeManifestFile(targetBrowser);
+      void makeManifestFile(targetBrowser);
     }
   }
 
   buildForBrowser(targetBrowser: Browser) {
     this.buildFiles.forEach((file) => {
-      build({
+      void build({
         entryPoints: [file],
         bundle: true,
         outdir: distPath(path.dirname(file), targetBrowser),
@@ -144,10 +150,10 @@ export class Builder {
       });
     });
     this.staticFiles.forEach((file) => {
-      this.copyStaticFile(file, targetBrowser);
+      void this.copyStaticFile(file, targetBrowser);
     });
     this.staticDirs.forEach((dir) => {
-      this.copyStaticDir(dir, targetBrowser);
+      void this.copyStaticDir(dir, targetBrowser);
     });
     this.makeManifestFileAndWatch(targetBrowser);
   }
