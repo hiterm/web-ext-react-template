@@ -11,7 +11,8 @@
     "package:firefox": "web-ext build -s dist-firefox --overwrite-dest",
     "lint": "eslint --max-warnings=0 . && prettier --check .",
     "lint:fix": "eslint --fix . && prettier --write .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "esbuild": "^0.15.10",
