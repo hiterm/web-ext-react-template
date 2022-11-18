@@ -16,6 +16,15 @@ module.exports = {
   ],
   rules: {
     'react/prop-types': 'off',
+    '@typescript-eslint/no-misused-promises': [
+      'error',
+      {
+        checksVoidReturn: {
+          arguments: false,
+          attributes: false,
+        },
+      },
+    ],
   },
   env: {
     node: true,
