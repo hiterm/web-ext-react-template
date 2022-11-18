@@ -62,6 +62,12 @@ yarn run package:firefox
 To install an unsigned add-on, you must use Firefox Developer Edition and change settings.
 https://support.mozilla.org/en-US/kb/add-on-signing-in-firefox
 
+### Type check
+
+```
+yarn run typecheck
+```
+
 ### ESLint
 
 ```
