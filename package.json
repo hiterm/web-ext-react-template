@@ -1,6 +1,6 @@
 {
   "name": "web-ext-react-template",
-  "version": "1.0.2",
+  "version": "2.2.2",
   "private": true,
   "scripts": {
     "build": "ts-node -T build.ts --firefox --chrome",
